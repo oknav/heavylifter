@@ -1,0 +1,12 @@
+|B| |M| |C| |F| |H|     |N| |R| |L|
+|R| |B| |L| |C| |G| |J| |L| |Z|    
+    |T| |Z| |S| |P| |V| |G| |M| |M|
+ 1   2   3   4   5   6   7   8   9 
+               bottom
+
+move 6 from 1 to 7
+move 2 from 2 to 4
+move 2 from 7 to 4
+move 6 from 4 to 3
+move 1 from 5 to 1
+move 3 from 8 to 3
