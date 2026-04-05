@@ -30,4 +30,5 @@ from heavylifter.v1.lift import lift
     ],
 )
 def test_lift(boxes: Stacks, movements: list[Movement], expected: Stacks):
-    assert lift(boxes, movements) == expected, json.dumps(expected)
+    lifted = lift(boxes, movements)
+    assert lifted == expected, json.dumps(lifted, indent=4)
