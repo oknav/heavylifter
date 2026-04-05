@@ -8,30 +8,24 @@ from heavylifter.v1.lift import lift
     "boxes, movements, expected",
     [
         (
-            {
-                "number_of_stacks": 4,
-                "stacks": [
-                    ["|K|", "|A|", "|P|"],
-                    ["|Q|", "|U|"],
-                    ["|B|"],
-                    ["|F|", "|T|"],
-                ],
-            },
             [
-                {"num_of_boxes": 1, "src_stack": 3, "dst_stack": 4},
-                {"num_of_boxes": 2, "src_stack": 1, "dst_stack": 3},
-                {"num_of_boxes": 1, "src_stack": 1, "dst_stack": 2},
-                {"num_of_boxes": 2, "src_stack": 4, "dst_stack": 1},
+                ["|K|", "|A|", "|P|"],
+                ["|Q|", "|U|"],
+                ["|B|"],
+                ["|F|", "|T|"],
             ],
-            {
-                "number_of_stacks": 4,
-                "stacks": [
-                    ["|F|", "|B|"],
-                    ["|P|", "|Q|", "|U|"],
-                    ["|A|", "|K|"],
-                    ["|T|"],
-                ],
-            },
+            [
+                {"box_count": 1, "src_stack": 3, "dst_stack": 4},
+                {"box_count": 2, "src_stack": 1, "dst_stack": 3},
+                {"box_count": 1, "src_stack": 1, "dst_stack": 2},
+                {"box_count": 2, "src_stack": 4, "dst_stack": 1},
+            ],
+            [
+                ["|F|", "|B|"],
+                ["|P|", "|Q|", "|U|"],
+                ["|A|", "|K|"],
+                ["|T|"],
+            ],
         )
     ],
 )

@@ -1,9 +1,7 @@
 from heavylifter.instructions import Stacks, Movement
 
 
-def lift(boxes: Stacks, movements: list[Movement]):
-    stacks: list[list[str]] = boxes["stacks"]
-
+def lift(stacks: Stacks, movements: list[Movement]):
     for move in movements:
         box_count = move["box_count"]
         src_stack_index = move["src_stack"] - 1
@@ -14,4 +12,4 @@ def lift(boxes: Stacks, movements: list[Movement]):
                 dst_stack_index
             ]
 
-    return boxes
+    return stacks

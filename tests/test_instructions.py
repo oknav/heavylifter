@@ -10,32 +10,26 @@ class TestInstructionParsing:
         [
             (
                 "instruction_set_read_test.txt",
-                {
-                    "number_of_stacks": 9,
-                    "stacks": [
-                        ["|B|", "|R|"],
-                        ["|M|", "|B|", "|T|"],
-                        ["|C|", "|L|", "|Z|"],
-                        ["|F|", "|C|", "|S|"],
-                        ["|H|", "|G|", "|P|"],
-                        ["|J|", "|V|"],
-                        ["|N|", "|L|", "|G|"],
-                        ["|R|", "|Z|", "|M|"],
-                        ["|L|", "|M|"],
-                    ],
-                },
+                [
+                    ["|B|", "|R|"],
+                    ["|M|", "|B|", "|T|"],
+                    ["|C|", "|L|", "|Z|"],
+                    ["|F|", "|C|", "|S|"],
+                    ["|H|", "|G|", "|P|"],
+                    ["|J|", "|V|"],
+                    ["|N|", "|L|", "|G|"],
+                    ["|R|", "|Z|", "|M|"],
+                    ["|L|", "|M|"],
+                ],
             ),
             (
                 "instruction_example.txt",
-                {
-                    "number_of_stacks": 4,
-                    "stacks": [
-                        ["|K|", "|A|", "|P|"],
-                        ["|Q|", "|U|"],
-                        ["|B|"],
-                        ["|F|", "|T|"],
-                    ],
-                },
+                [
+                    ["|K|", "|A|", "|P|"],
+                    ["|Q|", "|U|"],
+                    ["|B|"],
+                    ["|F|", "|T|"],
+                ],
             ),
         ],
         indirect=["instructions_from_filename"],
@@ -54,21 +48,21 @@ class TestInstructionParsing:
             (
                 "instruction_set_read_test.txt",
                 [
-                    {"num_of_boxes": 6, "src_stack": 1, "dst_stack": 7},
-                    {"num_of_boxes": 2, "src_stack": 2, "dst_stack": 4},
-                    {"num_of_boxes": 2, "src_stack": 7, "dst_stack": 4},
-                    {"num_of_boxes": 6, "src_stack": 4, "dst_stack": 3},
-                    {"num_of_boxes": 1, "src_stack": 5, "dst_stack": 1},
-                    {"num_of_boxes": 3, "src_stack": 8, "dst_stack": 3},
+                    {"box_count": 6, "src_stack": 1, "dst_stack": 7},
+                    {"box_count": 2, "src_stack": 2, "dst_stack": 4},
+                    {"box_count": 2, "src_stack": 7, "dst_stack": 4},
+                    {"box_count": 6, "src_stack": 4, "dst_stack": 3},
+                    {"box_count": 1, "src_stack": 5, "dst_stack": 1},
+                    {"box_count": 3, "src_stack": 8, "dst_stack": 3},
                 ],
             ),
             (
                 "instruction_example.txt",
                 [
-                    {"num_of_boxes": 1, "src_stack": 3, "dst_stack": 4},
-                    {"num_of_boxes": 2, "src_stack": 1, "dst_stack": 3},
-                    {"num_of_boxes": 1, "src_stack": 1, "dst_stack": 2},
-                    {"num_of_boxes": 2, "src_stack": 4, "dst_stack": 1},
+                    {"box_count": 1, "src_stack": 3, "dst_stack": 4},
+                    {"box_count": 2, "src_stack": 1, "dst_stack": 3},
+                    {"box_count": 1, "src_stack": 1, "dst_stack": 2},
+                    {"box_count": 2, "src_stack": 4, "dst_stack": 1},
                 ],
             ),
         ],
@@ -85,15 +79,12 @@ class TestInstructionParsing:
     "result_boxes, expected",
     [
         (
-            {
-                "number_of_stacks": 4,
-                "stacks": [
-                    ["|F|", "|B|"],
-                    ["|P|", "|Q|", "|U|"],
-                    ["|A|", "|K|"],
-                    ["|T|"],
-                ],
-            },
+            [
+                ["|F|", "|B|"],
+                ["|P|", "|Q|", "|U|"],
+                ["|A|", "|K|"],
+                ["|T|"],
+            ],
             [
                 ["   ", "|P|", "   ", "   "],
                 ["|F|", "|Q|", "|A|", "   "],
