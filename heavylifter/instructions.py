@@ -111,7 +111,13 @@ class Instruction:
 
     @staticmethod
     def _validate_movements(movements: list[str]):
-        pass
+        if not all(
+            re.fullmatch(pattern=r"^move \d+ from \d+ to \d+$", string=movement)
+            for movement in movements
+        ):
+            raise InvalidInputException(
+                "Movement instructions must match format of 'move #1 from #2 to #3'"
+            )
 
     def _clean_instructions(self, instructions: str) -> tuple[list[str], list[str]]:
         stacks_raw, movements_raw = self._split_instructions(instructions)
@@ -119,8 +125,6 @@ class Instruction:
         self._validate_movements(movements=movements_raw)
 
         return stacks_raw, movements_raw
-
-        # no empty boxes
 
     @cached_property
     def stacks(self) -> Stacks:
@@ -163,7 +167,7 @@ class Instruction:
         return movements
 
 
-def transpose_result_stacks(stacks: Stacks):
+def transpose_result_stacks(stacks: list[list[str]]):
     empty_box = "   "
     max_box_count = max(len(stack) for stack in stacks)
 
