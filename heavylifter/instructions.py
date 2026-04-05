@@ -112,3 +112,13 @@ class Instruction:
             )
 
         return movements
+
+
+def transpose_result_stacks(stacks: Stacks):
+    empty_box = "   "
+    max_box_count = max(len(stack) for stack in stacks)
+
+    result_stack = [
+        [empty_box] * (max_box_count - len(stack)) + stack for stack in stacks
+    ]
+    return [list(row) for row in zip(*result_stack)]

@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from heavylifter.instructions import Instruction
+from heavylifter.instructions import Instruction, transpose_result_stacks
 
 
 class TestInstructionParsing:
@@ -79,3 +79,29 @@ class TestInstructionParsing:
     ):
         movements = Instruction(instructions_from_filename).movements
         assert movements == expected, json.dumps(movements, indent=4)
+
+
+@pytest.mark.parametrize(
+    "result_boxes, expected",
+    [
+        (
+            {
+                "number_of_stacks": 4,
+                "stacks": [
+                    ["|F|", "|B|"],
+                    ["|P|", "|Q|", "|U|"],
+                    ["|A|", "|K|"],
+                    ["|T|"],
+                ],
+            },
+            [
+                ["   ", "|P|", "   ", "   "],
+                ["|F|", "|Q|", "|A|", "   "],
+                ["|B|", "|U|", "|K|", "|T|"],
+            ],
+        )
+    ],
+)
+def test_result_transpose(result_boxes, expected):
+    result = transpose_result_stacks(stacks=result_boxes)
+    assert result == expected, json.dumps(result, indent=4)
