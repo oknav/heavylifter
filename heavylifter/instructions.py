@@ -50,7 +50,7 @@ def _open_file(abs_path: str) -> str:
 
 class Instruction:
     def __init__(self, instructions: str):
-        self._boxes, self._movements = self._split_instructions(instructions)
+        self._stacks, self._movements = self._split_instructions(instructions)
 
     @staticmethod
     def _clean_lines(lines: list[str]):
@@ -58,7 +58,7 @@ class Instruction:
 
     @classmethod
     def _split_instructions(cls, instructions: str) -> tuple[list[str], list[str]]:
-        """Splits the input instructions into two groups, details about the boxes
+        """Splits the input instructions into two groups, details about the stacks
         and the movements.
 
         Args:
@@ -66,7 +66,7 @@ class Instruction:
 
         Returns:
             tuple[list[str], list[str]]: Returns a tuple with the lines containing
-            information about the `boxes` and `movements`
+            information about the `stacks` and `movements`
         """
 
         instruction_split = re.split(pattern="bottom", string=instructions)
@@ -76,15 +76,15 @@ class Instruction:
         )
 
     @cached_property
-    def boxes(self) -> Stacks:
+    def stacks(self) -> Stacks:
         # pattern to ensure empty spots in stack get parsed as well
         box_pattern = re.compile(r"(\s{3}|\|[A-Z]\|)\s?")
 
         # pop last stack as it containes the number of stacks
-        self._boxes.pop(-1)
+        self._stacks.pop(-1)
 
         stacks_by_row = [
-            re.findall(pattern=box_pattern, string=_boxes) for _boxes in self._boxes
+            re.findall(pattern=box_pattern, string=_stacks) for _stacks in self._stacks
         ]
         transposed_stacks = [
             list([box for box in row if box.strip()]) for row in zip(*stacks_by_row)

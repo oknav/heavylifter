@@ -39,7 +39,7 @@ class TestInstructionParsing:
         instructions_from_filename: str,
         expected: dict[str, list[str | int]],
     ):
-        boxes = Instruction(instructions_from_filename).boxes
+        boxes = Instruction(instructions_from_filename).stacks
         assert boxes == expected, json.dumps(boxes, indent=4)
 
     @pytest.mark.parametrize(
