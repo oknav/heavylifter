@@ -5,7 +5,6 @@ import re
 from heavylifter.instructions import (
     Instruction,
     InvalidInputException,
-    transpose_result_stacks,
 )
 from heavylifter.types import Movement
 
@@ -92,25 +91,3 @@ class TestInstructionParsing:
         movements = Instruction(instructions_from_filename).movements
         assert movements == expected, json.dumps(movements, indent=4)
 
-
-@pytest.mark.parametrize(
-    "result_boxes, expected",
-    [
-        (
-            [
-                ["|F|", "|B|"],
-                ["|P|", "|Q|", "|U|"],
-                ["|A|", "|K|"],
-                ["|T|"],
-            ],
-            [
-                ["   ", "|P|", "   ", "   "],
-                ["|F|", "|Q|", "|A|", "   "],
-                ["|B|", "|U|", "|K|", "|T|"],
-            ],
-        )
-    ],
-)
-def test_result_transpose(result_boxes: list[list[str]], expected: list[list[str]]):
-    result = transpose_result_stacks(stacks=result_boxes)
-    assert result == expected, json.dumps(result, indent=4)

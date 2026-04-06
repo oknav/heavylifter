@@ -34,3 +34,21 @@ def arrange_stacks(stacks: Stacks, movements: list[Movement], robot: Robot) -> S
 
         stacks = robot.lift(stacks=stacks, movement=move)
     return stacks
+
+
+def transpose_result_stacks(stacks: list[list[str]]) -> list[list[str]]:
+    """Transpose stack columns into rows again to make representation easier
+
+    Args:
+        stacks (list[list[str]]): stacks of boxes in columns
+
+    Returns:
+        list[list[str]]: stacks in rows with empty slots filled with whitespaces
+    """
+    empty_slot = "   "
+    max_box_count = max(len(stack) for stack in stacks)
+
+    result_stack = [
+        [empty_slot] * (max_box_count - len(stack)) + stack for stack in stacks
+    ]
+    return [list(row) for row in zip(*result_stack)]

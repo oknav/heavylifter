@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 import json
 from heavylifter.types import Stacks, Movement
-from heavylifter.lifter import Robot, arrange_stacks
+from heavylifter.lifter import Robot, arrange_stacks, transpose_result_stacks
 from heavylifter.v1.robot import LimitedRobot
 from heavylifter.v2.robot import StrongerRobot
 
@@ -117,3 +117,25 @@ def test_invalid_stack_ids(movements: list[Movement]):
         arrange_stacks(stacks=stacks, movements=movements, robot=mock_robot)
 
     assert exc_info.match("Source or destination stack ID does not exist")
+
+@pytest.mark.parametrize(
+    "result_boxes, expected",
+    [
+        (
+            [
+                ["|F|", "|B|"],
+                ["|P|", "|Q|", "|U|"],
+                ["|A|", "|K|"],
+                ["|T|"],
+            ],
+            [
+                ["   ", "|P|", "   ", "   "],
+                ["|F|", "|Q|", "|A|", "   "],
+                ["|B|", "|U|", "|K|", "|T|"],
+            ],
+        )
+    ],
+)
+def test_result_transpose(result_boxes: list[list[str]], expected: list[list[str]]):
+    result = transpose_result_stacks(stacks=result_boxes)
+    assert result == expected, json.dumps(result, indent=4)

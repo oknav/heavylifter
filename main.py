@@ -1,8 +1,8 @@
 import argparse
-from heavylifter.instructions import Instruction, transpose_result_stacks
+from heavylifter.instructions import Instruction
 import logging
 
-from heavylifter.lifter import arrange_stacks
+from heavylifter.lifter import arrange_stacks, transpose_result_stacks
 from heavylifter.types import Stacks
 from heavylifter.v1.robot import LimitedRobot
 from heavylifter.v2.robot import StrongerRobot
