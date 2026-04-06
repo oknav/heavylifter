@@ -61,7 +61,6 @@ def main():
         stacks=instruction.stacks, movements=instruction.movements, robot=robot
     )
     _pretty_print_result(stacks=arranged_stacks)
-    print("Hello from heavylifter!")
 
 
 if __name__ == "__main__":

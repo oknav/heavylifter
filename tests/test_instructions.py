@@ -1,5 +1,6 @@
 import pytest
 import json
+import re
 
 from heavylifter.instructions import (
     Instruction,
@@ -41,14 +42,18 @@ class TestInstructionParsing:
                 "'bottom' must be present in input instructions exactly once",
             ),
             (
+                "multiple_bottom",
+                "'bottom' must be present in input instructions exactly once",
+            ),
+            (
                 "no_stack_numbers",
-                "Format for numbering the stacks might be incorrect \(maximum 10 stacks are allowed\)",
+                "Format for numbering the stacks might be incorrect (maximum 10 stacks are allowed)",
             ),
             ("no_boxes", "There are no stacks present"),
             ("empty_boxes", "No empty boxes are allowed"),
             (
                 "more_than_max_stacks",
-                "Format for numbering the stacks might be incorrect \(maximum 10 stacks are allowed\)",
+                "Format for numbering the stacks might be incorrect (maximum 10 stacks are allowed)",
             ),
             (
                 "invalid_movements",
@@ -60,7 +65,7 @@ class TestInstructionParsing:
         with pytest.raises(InvalidInputException) as exc_info:
             Instruction(request.getfixturevalue(instructions))
 
-        assert exc_info.match(error_msg)
+        assert exc_info.match(re.escape(error_msg))
 
     def test_no_movements(self, no_movements: str):
         movements = Instruction(no_movements).movements
@@ -106,6 +111,6 @@ class TestInstructionParsing:
         )
     ],
 )
-def test_result_transpose(result_boxes, expected):
+def test_result_transpose(result_boxes: list[list[str]], expected: list[list[str]]):
     result = transpose_result_stacks(stacks=result_boxes)
     assert result == expected, json.dumps(result, indent=4)

@@ -34,6 +34,23 @@ move 2 from 4 to 1
 
 
 @pytest.fixture
+def multiple_bottom():
+    return """
+|K|            
+|A| |Q|     |F|
+|P| |U| |B| |T|
+ 1   2   3   4
+    bottom
+
+move 1 from 3 to 4
+move 2 from 1 to 3
+bottom
+move 1 from 1 to 2
+move 2 from 4 to 1
+"""
+
+
+@pytest.fixture
 def no_stack_numbers():
     return """
 |K|            
