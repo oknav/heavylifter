@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
+from typing import TypeAlias
 
 
 @dataclass
@@ -9,7 +10,7 @@ class Movement:
     dst_id: int
 
 
-Stacks = dict[int, list[str]]
+Stacks: TypeAlias = dict[int, list[str]]
 
 
 class Robot(metaclass=ABCMeta):

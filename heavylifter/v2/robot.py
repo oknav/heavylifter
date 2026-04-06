@@ -1,7 +1,6 @@
 from copy import copy
 
-from heavylifter.instructions import Stacks
-from heavylifter.types import Movement, Robot
+from heavylifter.types import Movement, Robot, Stacks
 
 
 class StrongerRobot(Robot):

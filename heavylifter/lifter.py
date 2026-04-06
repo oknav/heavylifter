@@ -1,7 +1,7 @@
 import logging
 from typing import TypeVar
 
-from heavylifter.instructions import Stacks, Movement
+from heavylifter.types import Stacks, Movement
 from heavylifter.v1.robot import LimitedRobot
 from heavylifter.v2.robot import StrongerRobot
 

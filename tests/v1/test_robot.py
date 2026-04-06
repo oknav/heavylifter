@@ -1,6 +1,6 @@
 import pytest
 import json
-from heavylifter.instructions import Stacks, Movement
+from heavylifter.types import Stacks, Movement
 from heavylifter.v1.robot import LimitedRobot
 
 
