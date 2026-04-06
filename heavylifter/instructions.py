@@ -1,20 +1,12 @@
 from functools import cached_property
 import logging
-from typing import TypedDict
 import re
+
+from heavylifter.types import Movement, Stacks
 
 
 class InvalidInputException(Exception):
     pass
-
-
-Stacks = dict[int, list[list[str]]]
-
-
-class Movement(TypedDict):
-    box_count: int
-    src_stack: int
-    dst_stack: int
 
 
 def _open_file(abs_path: str) -> str:
@@ -42,7 +34,7 @@ def _pre_validate(instructions: str) -> bool:
             "'bottom' must be present in input instructions exactly once"
         )
 
-    if re.match(pattern=r"\|\|", string=instructions):
+    if re.search(pattern=r"\|\||\s\|\s+\|\s", string=instructions):
         raise InvalidInputException("No empty boxes are allowed")
 
     return True
@@ -91,6 +83,8 @@ class Instruction:
 
     @staticmethod
     def _validate_stacks(stacks: list[str]):
+        if not stacks:
+            raise InvalidInputException("There are no stacks present")
         # last row should contain stack numbers less than 10
         stack_number_row = stacks[-1].strip()
 
@@ -159,8 +153,8 @@ class Instruction:
             movements.append(
                 Movement(
                     box_count=int(numbers[0]),
-                    src_stack=int(numbers[1]),
-                    dst_stack=int(numbers[2]),
+                    src_id=int(numbers[1]),
+                    dst_id=int(numbers[2]),
                 )
             )
 

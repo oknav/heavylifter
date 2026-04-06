@@ -1,27 +1,18 @@
 import pytest
 import json
 
-from heavylifter.instructions import Instruction, transpose_result_stacks
+from heavylifter.instructions import (
+    Instruction,
+    InvalidInputException,
+    transpose_result_stacks,
+)
+from heavylifter.types import Movement
 
 
 class TestInstructionParsing:
     @pytest.mark.parametrize(
         "instructions_from_filename, expected",
         [
-            (
-                "instruction_set_read_test.txt",
-                {
-                    1: ["|B|", "|R|"],
-                    2: ["|M|", "|B|", "|T|"],
-                    3: ["|C|", "|L|", "|Z|"],
-                    4: ["|F|", "|C|", "|S|"],
-                    5: ["|H|", "|G|", "|P|"],
-                    6: ["|J|", "|V|"],
-                    7: ["|N|", "|L|", "|G|"],
-                    8: ["|R|", "|Z|", "|M|"],
-                    9: ["|L|", "|M|"],
-                },
-            ),
             (
                 "instruction_example.txt",
                 {
@@ -34,7 +25,7 @@ class TestInstructionParsing:
         ],
         indirect=["instructions_from_filename"],
     )
-    def test_boxes(
+    def test_stacks(
         self,
         instructions_from_filename: str,
         expected: dict[str, list[str | int]],
@@ -43,26 +34,44 @@ class TestInstructionParsing:
         assert boxes == expected, json.dumps(boxes, indent=4)
 
     @pytest.mark.parametrize(
+        "instructions, error_msg",
+        [
+            (
+                "no_bottom",
+                "'bottom' must be present in input instructions exactly once",
+            ),
+            (
+                "no_stack_numbers",
+                "Format for numbering the stacks might be incorrect \(maximum 10 stacks are allowed\)",
+            ),
+            ("no_boxes", "There are no stacks present"),
+            ("empty_boxes", "No empty boxes are allowed"),
+            (
+                "more_than_max_stacks",
+                "Format for numbering the stacks might be incorrect \(maximum 10 stacks are allowed\)",
+            ),
+            (
+                "invalid_movements",
+                "Movement instructions must match format of 'move #1 from #2 to #3'",
+            ),
+        ],
+    )
+    def test_invalid_instructions(self, instructions: str, error_msg: str, request):
+        with pytest.raises(InvalidInputException) as exc_info:
+            Instruction(request.getfixturevalue(instructions))
+
+        assert exc_info.match(error_msg)
+
+    @pytest.mark.parametrize(
         "instructions_from_filename, expected",
         [
             (
-                "instruction_set_read_test.txt",
-                [
-                    {"box_count": 6, "src_stack": 1, "dst_stack": 7},
-                    {"box_count": 2, "src_stack": 2, "dst_stack": 4},
-                    {"box_count": 2, "src_stack": 7, "dst_stack": 4},
-                    {"box_count": 6, "src_stack": 4, "dst_stack": 3},
-                    {"box_count": 1, "src_stack": 5, "dst_stack": 1},
-                    {"box_count": 3, "src_stack": 8, "dst_stack": 3},
-                ],
-            ),
-            (
                 "instruction_example.txt",
                 [
-                    {"box_count": 1, "src_stack": 3, "dst_stack": 4},
-                    {"box_count": 2, "src_stack": 1, "dst_stack": 3},
-                    {"box_count": 1, "src_stack": 1, "dst_stack": 2},
-                    {"box_count": 2, "src_stack": 4, "dst_stack": 1},
+                    Movement(**{"box_count": 1, "src_id": 3, "dst_id": 4}),
+                    Movement(**{"box_count": 2, "src_id": 1, "dst_id": 3}),
+                    Movement(**{"box_count": 1, "src_id": 1, "dst_id": 2}),
+                    Movement(**{"box_count": 2, "src_id": 4, "dst_id": 1}),
                 ],
             ),
         ],
