@@ -18,6 +18,15 @@ class Instruction:
 
     @staticmethod
     def _pre_validate(instructions: str):
+        """Validates full instruction content
+
+        Args:
+            instructions (str): String containing instructions
+
+        Raises:
+            InvalidInputException: if no/multiple `bottom` is present in content
+            InvalidInputException: if empty boxes are present in content
+        """
         bottoms = re.findall("bottom", instructions)
         if not len(bottoms) == 1:
             raise InvalidInputException(
@@ -49,6 +58,16 @@ class Instruction:
 
     @staticmethod
     def _validate_stacks(stacks: list[str]):
+        """Validates stack part of the input instructions
+
+        Args:
+            stacks (list[str]): list of strings from the instruction content above _bottom_ string
+
+        Raises:
+            InvalidInputException: if the `stacks` are empty
+            InvalidInputException: if the last element in `stacks` does not contain stack numbering or invalid
+            InvalidInputException: if the label on the boxes are not globally unique
+        """
         if not stacks:
             raise InvalidInputException("There are no stacks present")
         # last row should contain stack numbers less than 10
@@ -65,12 +84,20 @@ class Instruction:
 
         # check if boxes are unique
         labelled_boxes = re.findall(pattern=r"(\|[A-Z]\|)", string="\n".join(stacks))
-
         if len(labelled_boxes) != len(set(labelled_boxes)):
             raise InvalidInputException("Box labels must be globally unique")
 
     @staticmethod
     def _validate_movements(movements: list[str]):
+        """Validates that the instructions for movements are correct
+
+        Args:
+            movements (list[str]): list of strings from the instruction content below _bottom_ string
+
+        Raises:
+            InvalidInputException: if there are any movement instruction not matching
+                                format: **move #1 from #2 to #3**
+        """
         if not all(
             re.fullmatch(pattern=r"^move \d+ from \d+ to \d+$", string=movement)
             for movement in movements
@@ -93,12 +120,14 @@ class Instruction:
             int, re.findall(pattern=r"\d+", string=self._stacks.pop(-1))
         )
 
-        # pattern to ensure empty spots in stack get parsed as well
+        # pattern to ensure empty slots in stack get parsed as well
         box_pattern = re.compile(r"(\s{3}|\|[A-Z]\|)\s?")
 
         stacks_by_row = [
             re.findall(pattern=box_pattern, string=_stacks) for _stacks in self._stacks
         ]
+
+        # transpose stacks to be able to pair stack with its ID
         transposed_stacks = [
             list([box for box in row if box.strip()]) for row in zip(*stacks_by_row)
         ]
@@ -111,10 +140,7 @@ class Instruction:
 
         movements = []
         for move in self._movements:
-            if not move.strip():
-                continue
-
-            # regex match the numbers, assign them in order to Movement dict
+            # regex match the numbers, assign them in order to Movement object
             numbers = re.findall(pattern=match_all_numbers, string=move)
             movements.append(
                 Movement(
@@ -127,11 +153,19 @@ class Instruction:
         return movements
 
 
-def transpose_result_stacks(stacks: list[list[str]]):
-    empty_box = "   "
+def transpose_result_stacks(stacks: list[list[str]]) -> list[list[str]]:
+    """Transpose stack columns into rows again to make representation easier
+
+    Args:
+        stacks (list[list[str]]): stacks of boxes in columns
+
+    Returns:
+        list[list[str]]: stacks in rows with empty slots filled with whitespaces
+    """
+    empty_slot = "   "
     max_box_count = max(len(stack) for stack in stacks)
 
     result_stack = [
-        [empty_box] * (max_box_count - len(stack)) + stack for stack in stacks
+        [empty_slot] * (max_box_count - len(stack)) + stack for stack in stacks
     ]
     return [list(row) for row in zip(*result_stack)]
