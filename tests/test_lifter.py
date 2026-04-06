@@ -58,3 +58,22 @@ def test_arrange_stacks(
 ):
     lifted = arrange_stacks(stacks, movements, robot)
     assert lifted == expected, json.dumps(lifted, indent=4)
+
+
+@pytest.mark.parametrize("robot", (LimitedRobot, StrongerRobot))
+def test_no_movements(robot: Robot):
+    movements = []
+    stacks = {
+        1: ["|K|", "|A|", "|P|"],
+        2: ["|Q|", "|U|"],
+        3: ["|B|"],
+        4: ["|F|", "|T|"],
+    }
+
+    lifted = arrange_stacks(stacks, movements, robot)
+    assert lifted == {
+        1: ["|K|", "|A|", "|P|"],
+        2: ["|Q|", "|U|"],
+        3: ["|B|"],
+        4: ["|F|", "|T|"],
+    }, json.dumps(lifted, indent=4)

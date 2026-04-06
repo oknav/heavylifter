@@ -62,6 +62,10 @@ class TestInstructionParsing:
 
         assert exc_info.match(error_msg)
 
+    def test_no_movements(self, no_movements: str):
+        movements = Instruction(no_movements).movements
+        assert len(movements) == 0
+
     @pytest.mark.parametrize(
         "instructions_from_filename, expected",
         [

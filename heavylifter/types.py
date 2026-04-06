@@ -9,7 +9,7 @@ class Movement:
     dst_id: int
 
 
-Stacks = dict[int, list[list[str]]]
+Stacks = dict[int, list[str]]
 
 
 class Robot(metaclass=ABCMeta):
