@@ -14,6 +14,15 @@ If the file cannot be opened, an error is thrown.
 Two different versions _(v1, v2)_ are available, by default _v1_ will be used.
 
 ## HOW TO
+
+### Requirements
+
+- Python3.13
+
+#### For running tests
+- UV package manager
+
+### Command
 ```
 python main.py filepath [--version {v1,v2}]
 ```
