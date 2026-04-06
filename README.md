@@ -40,4 +40,5 @@ Following validations apply:
 7. Source and destination stack IDs in movement instructions must be present in the stack ID row
 
 > [!TIP]
-> If an instruction wants to move more boxes than the source stack actually has, a warning is logged and all the boxes in the source stack are moved to the destination.
+> - If an instruction wants to move more boxes than the source stack actually has, a warning is logged and all the boxes in the source stack are moved to the destination.
+> - If there are no movement instructions provided, the result stacks will match the input.
