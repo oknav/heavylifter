@@ -1,19 +1,17 @@
 import logging
-from typing import TypeVar
 
-from heavylifter.types import Stacks, Movement
-from heavylifter.v1.robot import LimitedRobot
-from heavylifter.v2.robot import StrongerRobot
-
-Robot = TypeVar("Robot", LimitedRobot, StrongerRobot)
+from heavylifter.types import Robot, Stacks, Movement
 
 
-def arrange_stacks(stacks: Stacks, movements: list[Movement], robot: Robot):
+def arrange_stacks(stacks: Stacks, movements: list[Movement], robot: Robot) -> Stacks:
     for move in movements:
-        if move.box_count > len(stacks[move.src_id]) - 1:
+        if move.box_count > len(stacks[move.src_id]):
             logging.warning(
                 msg="Box count in instruction is more than the boxes in the stack. "
-                "Moving only the available number of boxes"
+                "Moving only the available number of boxes",
+                extra=dict(
+                    boxes_to_move=move.box_count, box_count=len(stacks[move.src_id])
+                ),
             )
 
         if not {move.src_id, move.dst_id}.issubset(stacks.keys()):

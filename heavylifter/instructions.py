@@ -1,5 +1,4 @@
 from functools import cached_property
-import logging
 import re
 
 from heavylifter.types import Movement, Stacks
@@ -9,58 +8,24 @@ class InvalidInputException(Exception):
     pass
 
 
-def _open_file(abs_path: str) -> str:
-    """Read lines from file into a string
-
-    Args:
-        abs_path (str): Absolute path of the file to read
-
-    Returns:
-        str: Content of the file
-    """
-    try:
-        with open(abs_path, "r") as f:
-            return f.read()
-    except OSError:
-        logging.error(msg="File could not be opened", exc_info=True)
-
-    return ""
-
-
-def _pre_validate(instructions: str) -> bool:
-    bottoms = re.findall("bottom", instructions)
-    if not len(bottoms) == 1:
-        raise InvalidInputException(
-            "'bottom' must be present in input instructions exactly once"
-        )
-
-    if re.search(pattern=r"\|\||\s\|\s+\|\s", string=instructions):
-        raise InvalidInputException("No empty boxes are allowed")
-
-    return True
-
-
-### Validation:
-# bottom is present
-# stack validation:
-#   letters between | | are unique
-#   no empty boxes
-#   no more than 10 stacks
-#   boxes (and 3-whitespaces) seperated by 1 space
-#
-# move validation:
-#   move #\d from #\dt to #\d (check if stack exists?)
-# NOTE: what happens, when there are not enough boxes in stack -- gonna stop moving
-
-
 class Instruction:
     def __init__(self, instructions: str):
-        _pre_validate(instructions)
         self._stacks, self._movements = self._clean_instructions(instructions)
 
     @staticmethod
     def _filter_empty(lines: list[str]):
         return [line for line in lines if line.strip()]
+
+    @staticmethod
+    def _pre_validate(instructions: str):
+        bottoms = re.findall("bottom", instructions)
+        if not len(bottoms) == 1:
+            raise InvalidInputException(
+                "'bottom' must be present in input instructions exactly once"
+            )
+
+        if re.search(pattern=r"\|\||\s\|\s+\|\s", string=instructions):
+            raise InvalidInputException("No empty boxes are allowed")
 
     @classmethod
     def _split_instructions(cls, instructions: str) -> tuple[list[str], list[str]]:
@@ -74,6 +39,7 @@ class Instruction:
             tuple[list[str], list[str]]: Returns a tuple with the lines containing
             information about the `stacks` and `movements`
         """
+        cls._pre_validate(instructions)
 
         instruction_split = re.split(pattern="bottom", string=instructions)
         return (
