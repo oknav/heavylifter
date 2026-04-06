@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 import json
 from heavylifter.types import Stacks, Movement
@@ -77,3 +79,41 @@ def test_no_movements(robot: Robot):
         3: ["|B|"],
         4: ["|F|", "|T|"],
     }, json.dumps(lifted, indent=4)
+
+
+@pytest.mark.parametrize(
+    "movements",
+    [
+        pytest.param(
+            [
+                Movement(**{"box_count": 1, "src_id": 3, "dst_id": 4}),
+                Movement(**{"box_count": 2, "src_id": 34, "dst_id": 3}),
+                Movement(**{"box_count": 1, "src_id": 1, "dst_id": 2}),
+            ],
+            id="invalid src_id",
+        ),
+        pytest.param(
+            [
+                Movement(**{"box_count": 1, "src_id": 3, "dst_id": 4}),
+                Movement(**{"box_count": 2, "src_id": 1, "dst_id": 3}),
+                Movement(**{"box_count": 1, "src_id": 1, "dst_id": 78}),
+                Movement(**{"box_count": 2, "src_id": 4, "dst_id": 1}),
+            ],
+            id="invalid dst_id",
+        ),
+    ],
+)
+def test_invalid_stack_ids(movements: list[Movement]):
+    stacks = {
+        1: ["|K|", "|A|", "|P|"],
+        2: ["|Q|", "|U|"],
+        3: ["|B|"],
+        4: ["|F|", "|T|"],
+    }
+    mock_robot = Mock(spec=LimitedRobot)
+    mock_robot.lift.return_value = stacks
+
+    with pytest.raises(ValueError) as exc_info:
+        arrange_stacks(stacks=stacks, movements=movements, robot=mock_robot)
+
+    assert exc_info.match("Source or destination stack ID does not exist")
