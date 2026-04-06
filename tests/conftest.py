@@ -135,3 +135,33 @@ def no_movements():
     bottom
 
 """
+
+@pytest.fixture
+def more_stacks_than_ids():
+    return """
+|K|            
+|A| |Q|     |F|
+|P| |U| |B| |T| |X|
+ 1   2   3   4     
+    bottom
+
+move 1 from 3 to 4
+move 2 from 1 to 3
+move 1 from 1 to 2
+move 2 from 4 to 1
+"""
+
+@pytest.fixture
+def more_ids_than_stacks():
+    return """
+|K|            
+|A| |Q|        
+|P| |U| |B|    
+ 1   2   3   4
+    bottom
+
+move 1 from 3 to 4
+move 2 from 1 to 3
+move 1 from 1 to 2
+move 2 from 4 to 1
+"""

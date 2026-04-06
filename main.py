@@ -14,7 +14,7 @@ def _pretty_print_result(stacks: Stacks):
         " ".join(stack) for stack in transpose_result_stacks(list(stacks.values()))
     ]
     str_stacks = "\n".join(str_stack_rows)
-    stack_numbers = "   ".join(str(num) for num in stacks.keys())
+    stack_numbers = "   ".join(map(str, stacks.keys()))
     mid_position = int((len(stack_numbers) + 2) / 2)
 
     print(str_stacks)
@@ -57,10 +57,13 @@ def main():
             return
 
     instruction = Instruction(file_content)
-    arranged_stacks = arrange_stacks(
-        stacks=instruction.stacks, movements=instruction.movements, robot=robot
-    )
-    _pretty_print_result(stacks=arranged_stacks)
+    try:
+        arranged_stacks = arrange_stacks(
+            stacks=instruction.stacks, movements=instruction.movements, robot=robot
+        )
+        _pretty_print_result(stacks=arranged_stacks)
+    except ValueError:
+        logging.error(msg="Error occured when moving boxes", exc_info=True)
 
 
 if __name__ == "__main__":

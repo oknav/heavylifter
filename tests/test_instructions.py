@@ -1,3 +1,5 @@
+from multiprocessing import Value
+
 import pytest
 import json
 import re
@@ -25,13 +27,25 @@ class TestInstructionParsing:
         ],
         indirect=["instructions_from_filename"],
     )
-    def test_stacks(
+    def test_stacks_from_file(
         self,
         instructions_from_filename: str,
         expected: dict[str, list[str | int]],
     ):
         boxes = Instruction(instructions_from_filename).stacks
         assert boxes == expected, json.dumps(boxes, indent=4)
+
+    def test_more_ids_than_stacks(self, more_ids_than_stacks: str):
+        assert Instruction(more_ids_than_stacks).stacks == {
+                    1: ["|K|", "|A|", "|P|"],
+                    2: ["|Q|", "|U|"],
+                    3: ["|B|"],
+                    4: [],
+                }
+
+    def test_more_stacks_than_ids(self, more_stacks_than_ids: str,):
+        with pytest.raises(ValueError) as exc_info:
+            Instruction(more_stacks_than_ids).stacks
 
     @pytest.mark.parametrize(
         "instructions, error_msg",

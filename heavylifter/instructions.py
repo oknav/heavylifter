@@ -1,3 +1,4 @@
+from email.policy import strict
 from functools import cached_property
 import re
 
@@ -87,6 +88,7 @@ class Instruction:
         if len(labelled_boxes) != len(set(labelled_boxes)):
             raise InvalidInputException("Box labels must be globally unique")
 
+
     @staticmethod
     def _validate_movements(movements: list[str]):
         """Validates that the instructions for movements are correct
@@ -113,12 +115,12 @@ class Instruction:
 
         return stacks_raw, movements_raw
 
-    @cached_property
+    @property
     def stacks(self) -> Stacks:
         # get numbers only from string
-        stack_numbers = map(
+        stack_numbers = list(map(
             int, re.findall(pattern=r"\d+", string=self._stacks.pop(-1))
-        )
+        ))
 
         # pattern to ensure empty slots in stack get parsed as well
         box_pattern = re.compile(r"(\s{3}|\|[A-Z]\|)\s?")
@@ -129,12 +131,12 @@ class Instruction:
 
         # transpose stacks to be able to pair stack with its ID
         transposed_stacks = [
-            list([box for box in row if box.strip()]) for row in zip(*stacks_by_row)
+            list([box for box in row if box.strip()]) for row in zip(*stacks_by_row, strict=True)
         ]
 
-        return dict(zip(stack_numbers, transposed_stacks))
+        return dict(zip(stack_numbers, transposed_stacks, strict=True))
 
-    @cached_property
+    @property
     def movements(self) -> list[Movement]:
         match_all_numbers = r"\d+"
 
